@@ -14,21 +14,20 @@ fn main() -> std::io::Result<()> {
     
     let ops = make_ops();
 
-    let freqs = contents.split("\n");
+    let mut freqs_vec: Vec<&str> = contents.split("\n").collect();
+    freqs_vec.retain(|x| !x.is_empty());
+    let freqs = freqs_vec.into_iter();
 
-    let mut current_freq: i32 = 0;
-    for freq in freqs {
+    let final_freq = freqs.fold(0, |acc, freq| {
       let freq_str = freq.to_string();
-      if freq_str.len() > 1 {
-        let split_freq = freq_str.split_at(1);
-        let (operator, frequency) = split_freq;
-        let func = ops.get(operator).unwrap_or_else(|| process::exit(1));
-        
-        current_freq = func(current_freq, frequency.parse::<i32>().unwrap());
-      }
-    }
+      let split_freq = freq_str.split_at(1);
+      let (operator, frequency) = split_freq;
+      let func = ops.get(operator).unwrap_or_else(|| process::exit(1));
 
-    println!("{:?}", current_freq);
+      return func(acc, frequency.parse::<i32>().unwrap());
+    });
+
+    println!("{:?}", final_freq);
 
     Ok(())
 }

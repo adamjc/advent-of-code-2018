@@ -13,6 +13,16 @@ fn main() -> std::io::Result<()> {
     
     let ops = make_ops();
 
+    let freqs = contents.split("\n");
+
+    for freq in freqs {
+      let freq_str = freq.to_string();
+      if freq_str.len() > 1 {
+        let split_freq = freq_str.split_at(1);
+        // Now have a tuple containing (<operator>, <value>)
+      }
+    }
+
     Ok(())
 }
 

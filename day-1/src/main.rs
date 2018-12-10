@@ -5,6 +5,7 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::collections::HashMap;
 use std::boxed::Box;
+use std::process;
 
 fn main() -> std::io::Result<()> {
     let mut file = File::open("./src/input.txt")?;
@@ -15,13 +16,19 @@ fn main() -> std::io::Result<()> {
 
     let freqs = contents.split("\n");
 
+    let mut current_freq: i32 = 0;
     for freq in freqs {
       let freq_str = freq.to_string();
       if freq_str.len() > 1 {
         let split_freq = freq_str.split_at(1);
-        // Now have a tuple containing (<operator>, <value>)
+        let (operator, frequency) = split_freq;
+        let func = ops.get(operator).unwrap_or_else(|| process::exit(1));
+        
+        current_freq = func(current_freq, frequency.parse::<i32>().unwrap());
       }
     }
+
+    println!("{:?}", current_freq);
 
     Ok(())
 }

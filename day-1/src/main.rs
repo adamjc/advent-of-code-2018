@@ -19,9 +19,7 @@ fn main() -> std::io::Result<()> {
     let freqs = freqs_vec.into_iter();
 
     let final_freq = freqs.fold(0, |acc, freq| {
-      let freq_str = freq.to_string();
-      let split_freq = freq_str.split_at(1);
-      let (operator, frequency) = split_freq;
+      let (operator, frequency) = freq.split_at(1);
       let func = ops.get(operator).unwrap_or_else(|| process::exit(1));
 
       return func(acc, frequency.parse::<i32>().unwrap());

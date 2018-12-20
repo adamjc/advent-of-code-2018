@@ -1,22 +1,31 @@
 use std::io::{Read, Result, stdin};
 
-fn main() -> Result<()> {
-  let mut ids = String::new();
-  stdin().read_to_string(&mut ids)?;
+trait Duplicate {
+  fn find_dupes(&self, other: &str) -> &str;
+}
 
-  for id in ids.split("\n") {
-    let (first, rest) = ids.split("\n").collect::<Vec<&str>>().split_first().unwrap();
+impl Duplicate for &str {
+  fn find_dupes(&self, other: &str) -> &str {
+    // Go through each character, find how many dupes...
+    "Not yet implemented"
+  }
+}
+
+fn main() -> Result<()> {
+  let mut buffer = String::new();
+  stdin().read_to_string(&mut buffer)?;
+
+  let ids = buffer.split("\n").collect::<Vec<&str>>();
+
+  for id in &ids {
+    let (first, rest) = ids.split_first().unwrap();
 
     for next_id in rest {
       let diffs = 0;
       let next_chars = next_id.chars();
       let id_chars = id.chars();
 
-      for (i, val) in next_id.enumerate() {
-        if id_chars[i] != next_chars[i] {
-          diffs += 1;
-        }
-      }
+      println!("{:?}", next_id.find_dupes("Hello"));
     }
   }
 

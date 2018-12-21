@@ -18,9 +18,6 @@ impl Duplicate for &str {
       }
     }
 
-    println!("self: {:?}", self);
-    println!("other: {:?}", other);
-
     if number_of_dupes == other.len() - 1 {
       return true
     }
@@ -34,47 +31,35 @@ fn main() -> Result<()> {
   stdin().read_to_string(&mut buffer)?;
 
   let ids = buffer.split("\n").collect::<Vec<&str>>();
+  let mut almost_dupes = ("", "");
 
-  for id in &ids {
-    let (first, rest) = ids.split_first().unwrap();
-
-    for next_id in rest {
-      let diffs = 0;
-      let next_chars = next_id.chars();
-      let id_chars = id.chars();
-
-      let is_almost_dupe = next_id.is_almost_duplicate(first);
+  for id in &ids {  
+    for next_id in &ids {
+      let is_almost_dupe = id.is_almost_duplicate(next_id);
 
       if is_almost_dupe {
-        println!("{:?}", next_id);
-        println!("{:?}", first);
+        almost_dupes = (id, next_id);
+        break
       }
-
     }
   }
+
+  println!("{:?}", remove_dupes(almost_dupes.0, almost_dupes.1));
 
   Ok(())
 }
 
-#[cfg(test)]
-mod tests {
-  #[test]
-  fn it_works () {
-    let a = "abc".as_bytes().into_iter().fold("".to_string(), |mut acc, next| {
-      acc.push_str(&next.to_string());
+fn remove_dupes(first: &str, second: &str) -> String {
+  let mut dupe_chars = String::new();
 
-      acc
-    });
-
-    let b = "abd".as_bytes().into_iter().fold("".to_string(), |mut acc, next| {
-      acc.push_str(&next.to_string());
-
-      acc
-    });
-
-    assert_eq!(a.parse::<u32>().unwrap(), 979899);
-    assert_eq!(b.parse::<u32>().unwrap(), 9798100);
-    assert_eq!(202 & 202, 202);
-    assert_eq!(a.parse::<u32>().unwrap() & b.parse::<u32>().unwrap(), 979899)
+  for (i, _) in first.char_indices() {
+    let this_char = first.get(i..i + 1);
+      let other_char = second.get(i..i + 1);
+      
+      if this_char == other_char {
+        dupe_chars.push_str(this_char.unwrap());
+      }
   }
+
+  dupe_chars
 }
